@@ -18,6 +18,7 @@ import {
   writeBatch,
   query,
   getDocs,
+  Timestamp
 } from 'firebase/firestore';
 
 
@@ -65,7 +66,7 @@ export const addCollectionAndDocuments = async (
 };
 
 export const getCategoriesAndDocuments = async () => {
-  const collectionRef = collection(db, 'categories');
+  const collectionRef = collection(db, 'claims');
   const q = query(collectionRef);
 
   const querySnapshot = await getDocs(q);
@@ -124,13 +125,27 @@ export const signOutUser = async () => await signOut(auth);
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
 
-export const createClaimDocument = async (title, lawyerName, lawyerEmail ) => {
+export const createClaimDocument = async (ownerId, title, lawyerName, lawyerEmail ) => {
   const newClaimRef = doc(collection(db, "claims"));
-
-  await setDoc(newClaimRef, {
+  const response= await setDoc(newClaimRef, {
+    owner: ownerId,
     title: title,
     lawyerName: lawyerName,
     lawyerEmail: lawyerEmail,
-    creationDate: new Date()
+    creationDate: Timestamp.fromDate(new Date())
   });
+  const newClaim = await getDoc(newClaimRef);
+  return {id: newClaimRef, ...newClaim};
+}
+
+export const getClaimDocuments = async () => {
+  const collectionRef = collection(db, 'claims');
+  const q = query(collectionRef);  // where("name", "==", true)
+
+  const querySnapshot = await getDocs(q);
+  const claimsMap = querySnapshot.docs.map((docSnapshot) => {
+    return { id: docSnapshot.id, ...docSnapshot.data()};
+  });
+  console.log(claimsMap)
+  return claimsMap;
 }

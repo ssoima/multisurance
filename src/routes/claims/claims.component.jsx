@@ -1,10 +1,12 @@
 import {Button, Card, Form, Input, Modal} from "antd";
-import {useState} from "react";
+import {useState, useEffect, useContext} from "react";
 import './claims.styles.scss';
 import ClaimCard from "../../components/claim-card/claim-card.component";
 import './claims.styles';
-import {ClaimCardContainer, ClaimsContainer} from "./claims.styles";
-import {createClaimDocument} from "../../utils/firebase/firebase.utils";
+import {ClaimsContainer} from "./claims.styles";
+import {createClaimDocument, getClaimDocuments} from "../../utils/firebase/firebase.utils";
+import {ClaimsContext} from '../../contexts/claims.context'
+import {UserContext} from "../../contexts/user.context";
 
 const defaultFormFields = {
     title: '',
@@ -19,16 +21,25 @@ const Claims = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { title, lawyerName, lawyerEmail } = formFields;
     const [form] = Form.useForm();
+    const {claims, setClaims} = useContext(ClaimsContext);
+    const {currentUser, setCurrentUser} = useContext(UserContext);
 
     const showModal = () => {
         setVisible(true);
     };
 
+    useEffect(() => {
+        async function fetchData() {
+            console.log(await getClaimDocuments());
+        }
+        fetchData();
+    },[])
+
     const handleOk = async () => {
         setModalText('The modal will be closed after two seconds');
         setConfirmLoading(true);
-        console.log(formFields)
-        await createClaimDocument(title, lawyerName, lawyerEmail);
+        const newClaim = await createClaimDocument(currentUser.uid ,title, lawyerName, lawyerEmail);
+        setClaims([newClaim, ...claims]);
         setVisible(false);
         setConfirmLoading(false);
         resetFormFields();
@@ -48,12 +59,15 @@ const Claims = () => {
     const resetFormFields = () => {
         setFormFields(defaultFormFields);
     };
+/*
 
+* */
     return (
         <ClaimsContainer>
-                <ClaimCard claim={
-                    {title: "titlebla", date: "dsada", lawyerName:"LawyerName", lawyerEmail:"LawyerEmail"}
-                } />
+            {claims ? claims.map( (claim) => {
+                console.log(claim);
+                return (<ClaimCard claim={claim} key={claim.id} />);
+            }) : ''}
             <Button type="primary" onClick={showModal}>
                 NEUE RECHTSANFRAGE MELDEN
             </Button>
