@@ -64,10 +64,9 @@ const Claims = () => {
 * */
     return (
         <ClaimsContainer>
-            {claims ? claims.map( (claim) => {
-                console.log(claim);
-                return (<ClaimCard claim={claim} key={claim.id} />);
-            }) : ''}
+            {claims ? claims.map( (claim) => (
+                <ClaimCard claim={claim} key={claim.id} />
+            )) : ''}
             <Button type="primary" onClick={showModal}>
                 NEUE RECHTSANFRAGE MELDEN
             </Button>
