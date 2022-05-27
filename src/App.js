@@ -4,8 +4,8 @@ import Home from './routes/home/home.component';
 import Navigation from './routes/navigation/navigation.component';
 import Authentication from './routes/authentication/authentication.component';
 import 'antd/dist/antd.css';
-import ClaimComponent from "./routes/claim/claim.component";
 import Claims from "./routes/claims/claims.component";
+import Claim from "./routes/claim/claim.component";
 
 const App = () => {
   return (
@@ -13,8 +13,10 @@ const App = () => {
       <Route path='/' element={<Navigation />}>
         <Route index element={<Home />} />
         <Route path='auth' element={<Authentication />} />
-        <Route path='claims' element={<Claims />} />
-        <Route path='claim' element={<ClaimComponent />} />
+        <Route path='claims' >
+            <Route index element={<Claims />} />
+            <Route path=":claimId" element={<Claim />} />
+        </Route>
       </Route>
     </Routes>
   );

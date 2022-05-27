@@ -22,9 +22,7 @@ const Navigation = () => {
             <AntDesignOutlined style={{ fontSize: '35px'}}/>
         </LogoContainer>
         <NavLinks>
-          <NavLink to='/claims'>Claims</NavLink>
-          <NavLink to='/claim'>Claim</NavLink>
-
+          <NavLink to='/claims'>Rechtsfragen</NavLink>
           {currentUser ? (
             <NavLink as='span' onClick={signOutUser}>
               SIGN OUT

@@ -3,11 +3,11 @@ import { createContext, useState, useEffect } from 'react';
 import { getClaimDocuments } from '../utils/firebase/firebase.utils';
 
 export const ClaimsContext = createContext({
-  claimsMap: {},
+  claimsMap: null,
 });
 
 export const ClaimsProvider = ({ children }) => {
-  const [claims, setClaims] = useState({});
+  const [claims, setClaims] = useState(null);
 
   useEffect(() => {
     const getClaimsMap = async () => {

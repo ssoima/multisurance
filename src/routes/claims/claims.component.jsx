@@ -3,7 +3,7 @@ import {useState, useEffect, useContext} from "react";
 import './claims.styles.scss';
 import ClaimCard from "../../components/claim-card/claim-card.component";
 import './claims.styles';
-import {ClaimsContainer} from "./claims.styles";
+import {ClaimsContainer, ClaimsFlex} from "./claims.styles";
 import {createClaimDocument, getClaimDocuments} from "../../utils/firebase/firebase.utils";
 import {ClaimsContext} from '../../contexts/claims.context'
 import {UserContext} from "../../contexts/user.context";
@@ -23,17 +23,23 @@ const Claims = () => {
     const [form] = Form.useForm();
     const {claims, setClaims} = useContext(ClaimsContext);
     const {currentUser, setCurrentUser} = useContext(UserContext);
+    let loading=true;
 
     const showModal = () => {
         setVisible(true);
     };
-
+/*
     useEffect(() => {
+        if (claims!== {})
+        loading=false;
+
+    }, [])*/
+   /* useEffect(() => {
         async function fetchData() {
             console.log(await getClaimDocuments());
         }
         fetchData();
-    },[])
+    },[])*/
 
     const handleOk = async () => {
         setModalText('The modal will be closed after two seconds');
@@ -59,17 +65,24 @@ const Claims = () => {
     const resetFormFields = () => {
         setFormFields(defaultFormFields);
     };
+    console.log(claims);
 /*
 
 * */
     return (
         <ClaimsContainer>
-            {claims ? claims.map( (claim) => (
-                <ClaimCard claim={claim} key={claim.id} />
-            )) : ''}
-            <Button type="primary" onClick={showModal}>
-                NEUE RECHTSANFRAGE MELDEN
-            </Button>
+            <div className="headline">
+                <h2>Claims</h2>
+
+                <Button type="primary" onClick={showModal}>
+                    NEUE RECHTSANFRAGE MELDEN
+                </Button>
+            </div>
+                <ClaimsFlex>
+                    {claims ? claims.map( (claim) => (
+                        <ClaimCard claim={claim} key={claim.id} />
+                    )) : ''}
+                </ClaimsFlex>
             <Modal
                 title="Title"
                 visible={visible}

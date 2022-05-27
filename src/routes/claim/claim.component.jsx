@@ -1,9 +1,16 @@
 import ProcessTracking from "../../components/process-tracking/process-tracking";
 import {Button, Input, Tabs} from "antd";
+import {useParams} from "react-router";
+import {ClaimsContext} from "../../contexts/claims.context";
+import {useContext} from "react";
 
 const { TabPane } = Tabs;
 
-const ClaimComponent = () => {
+const Claim = () => {
+    let { claimId } = useParams();
+    const claims = useContext(ClaimsContext);
+
+    //{ id, ownerId, title, lawyerName, lawyerEmail, creationDate }
 
     const onTabChange = (key) => {
         console.log(key);
@@ -11,25 +18,27 @@ const ClaimComponent = () => {
 
     return (
         <div>
-            <h1> Behandlung beim Peter Reithmeier</h1>
+            <h1> Rechtsanfrage an {claims[claimId] ? claims[claimId].lawyerName : ''}</h1>
             <ProcessTracking />
-            <div>
-                <h2>Sende deinem Arzt eine erneute Bestätigungsanfrage</h2>
-                <Input placeholder="Praxis e-mail" />
+            <div className="query-form">
+                <h2>Sende deinem Rechtsanwalt eine erneute Bestätigungsanfrage</h2>
+                <Input placeholder="E-mail" />
                 <Button type="primary" ghost>
                     Bestätigungsanfrage schicken
                 </Button>
             </div>
             <Tabs defaultActiveKey="1" onChange={onTabChange}>
                 <TabPane tab="Leistungsbeschreibung" key="leistungsbeschreibung">
-                    Leistungsbeschreibung Tab here
+                    <div className="tab-content">
+                        <img src="https://irights.info/wp-content/uploads/2016/05/bean-belegfunktion.png"/>
+                    </div>
                 </TabPane>
                 <TabPane tab="Rechnung" key="rechnung">
-                    Rechnung Tab here
+                    <img src="https://memegenerator.net/img/instances/65998081.jpg"/>
                 </TabPane>
             </Tabs>
         </div>
     )
 };
 
-export default ClaimComponent;
+export default Claim;
