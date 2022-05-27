@@ -2,18 +2,26 @@ import ProcessTracking from "../../components/process-tracking/process-tracking"
 import {Button, Input, Tabs} from "antd";
 import {useParams} from "react-router";
 import {ClaimsContext} from "../../contexts/claims.context";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
+import {useState} from "react";
 
 const { TabPane } = Tabs;
+
+const defaultClaim = {
+    claim: '',
+    setClaim: () => null
+};
 
 const Claim = () => {
     let { claimId } = useParams();
     const {claims, setClaims} = useContext(ClaimsContext);
+    const [claim, setClaim] = useState(defaultClaim);
 
-    const claim = () => {
-        console.log(claims);
-        return claims ? claims.find((claim) => claim.id === claimId) : null
-    }
+
+    useEffect(() => {
+        setClaim(claims ? claims.find((claim) => claim.id === claimId) : null)
+        console.log(claim)
+    }, [claims]);
 
     const onTabChange = (key) => {
         console.log(key);
@@ -21,8 +29,8 @@ const Claim = () => {
 
     return (
         <div>
-            <h1> Rechtsanfrage an {claim() ? claim().lawyerName : ''}</h1>
-            <ProcessTracking/>
+            <h1> Rechtsanfrage an {claim ? claim.lawyerName : ''}</h1>
+            <ProcessTracking claim={claim}/>
             <div className="query-form">
                 <h2>Sende deinem Rechtsanwalt eine erneute Bestätigungsanfrage</h2>
                 <Input placeholder="E-mail"/>

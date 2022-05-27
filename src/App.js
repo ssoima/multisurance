@@ -6,6 +6,7 @@ import Authentication from './routes/authentication/authentication.component';
 import 'antd/dist/antd.css';
 import Claims from "./routes/claims/claims.component";
 import Claim from "./routes/claim/claim.component";
+import LawyerClaim from "./routes/lawyerClaim/lawyer-claim.component";
 
 const App = () => {
   return (
@@ -17,6 +18,9 @@ const App = () => {
             <Route index element={<Claims />} />
             <Route path=":claimId" element={<Claim />} />
         </Route>
+          <Route path='lawyerClaim'>
+              <Route path=":claimId" element={<LawyerClaim />} />
+          </Route>
       </Route>
     </Routes>
   );

@@ -48,37 +48,6 @@ export const signInWithGoogleRedirect = () =>
 
 export const db = getFirestore();
 
-export const addCollectionAndDocuments = async (
-  collectionKey,
-  objectsToAdd,
-  field
-) => {
-  const collectionRef = collection(db, collectionKey);
-  const batch = writeBatch(db);
-
-  objectsToAdd.forEach((object) => {
-    const docRef = doc(collectionRef, object.title.toLowerCase());
-    batch.set(docRef, object);
-  });
-
-  await batch.commit();
-  console.log('done');
-};
-
-export const getCategoriesAndDocuments = async () => {
-  const collectionRef = collection(db, 'claims');
-  const q = query(collectionRef);
-
-  const querySnapshot = await getDocs(q);
-  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    const { title, items } = docSnapshot.data();
-    acc[title.toLowerCase()] = items;
-    return acc;
-  }, {});
-
-  return categoryMap;
-};
-
 export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
@@ -132,7 +101,8 @@ export const createClaimDocument = async (ownerId, title, lawyerName, lawyerEmai
     title: title,
     lawyerName: lawyerName,
     lawyerEmail: lawyerEmail,
-    creationDate: Timestamp.fromDate(new Date())
+    creationDate: Timestamp.fromDate(new Date()),
+    confirmedByLawyer: false
   });
   const newClaim = await getDoc(newClaimRef);
   return {id: newClaimRef, ...newClaim};
@@ -148,4 +118,9 @@ export const getClaimDocuments = async () => {
   });
   console.log(claimsMap)
   return claimsMap;
+}
+
+export const updateClaimDocument = async (claim) => {
+  const claimRef = collection(db, 'claims', claim.id);
+  await setDoc(claimRef, claim, );
 }
