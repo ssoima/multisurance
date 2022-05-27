@@ -8,9 +8,12 @@ const { TabPane } = Tabs;
 
 const Claim = () => {
     let { claimId } = useParams();
-    const claims = useContext(ClaimsContext);
+    const {claims, setClaims} = useContext(ClaimsContext);
 
-    //{ id, ownerId, title, lawyerName, lawyerEmail, creationDate }
+    const claim = () => {
+        console.log(claims);
+        return claims ? claims.find((claim) => claim.id === claimId) : null
+    }
 
     const onTabChange = (key) => {
         console.log(key);
@@ -18,11 +21,11 @@ const Claim = () => {
 
     return (
         <div>
-            <h1> Rechtsanfrage an {claims[claimId] ? claims[claimId].lawyerName : ''}</h1>
-            <ProcessTracking />
+            <h1> Rechtsanfrage an {claim() ? claim().lawyerName : ''}</h1>
+            <ProcessTracking/>
             <div className="query-form">
                 <h2>Sende deinem Rechtsanwalt eine erneute Bestätigungsanfrage</h2>
-                <Input placeholder="E-mail" />
+                <Input placeholder="E-mail"/>
                 <Button type="primary" ghost>
                     Bestätigungsanfrage schicken
                 </Button>
