@@ -14,11 +14,13 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
   collection,
   writeBatch,
   query,
   getDocs,
-  Timestamp
+  Timestamp,
+  serverTimestamp
 } from 'firebase/firestore';
 
 
@@ -29,7 +31,7 @@ const firebaseConfig = {
   projectId: "multisurance",
   storageBucket: "multisurance.appspot.com",
   messagingSenderId: "631689118882",
-  appId: "1:631689118882:web:08fe9de958329a39ba83fb"
+  appId: "1:631689118882:web:08fe9de958329a39ba83fb",
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -104,6 +106,9 @@ export const createClaimDocument = async (ownerId, title, lawyerName, lawyerEmai
     creationDate: Timestamp.fromDate(new Date()),
     confirmedByLawyer: false
   });
+  /*const updateTimestamp = await updateDoc(new, {
+    timestamp: serverTimestamp()
+  });*/
   const newClaim = await getDoc(newClaimRef);
   return {id: newClaimRef, ...newClaim};
 }
@@ -116,11 +121,10 @@ export const getClaimDocuments = async () => {
   const claimsMap = querySnapshot.docs.map((docSnapshot) => {
     return { id: docSnapshot.id, ...docSnapshot.data()};
   });
-  console.log(claimsMap)
   return claimsMap;
 }
 
-export const updateClaimDocument = async (claim) => {
-  const claimRef = collection(db, 'claims', claim.id);
-  await setDoc(claimRef, claim, );
+export const confirmClaimByLawyer = async (claim) => {
+  const claimDocRef = doc(db, "claims", claim.id );
+  await updateDoc(claimDocRef, {confirmedByLawyer: true});
 }
