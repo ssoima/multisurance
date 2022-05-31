@@ -17,7 +17,7 @@ const ClaimCard = ({claim}) => {
         bordered={false}
         style={{
         }}
-        extra={creationDate %60}
+        extra={creationDate % 60}
         actions={[
             <EditOutlined key="edit" />,
             <EllipsisOutlined key="ellipsis" />,

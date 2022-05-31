@@ -119,7 +119,11 @@ export const getClaimDocuments = async () => {
 
   const querySnapshot = await getDocs(q);
   const claimsMap = querySnapshot.docs.map((docSnapshot) => {
-    return { id: docSnapshot.id, ...docSnapshot.data()};
+    let snapshotData = docSnapshot.data()
+    console.log(snapshotData);
+    console.log(new Timestamp(snapshotData.creationDate.seconds, snapshotData.creationDate.nanoseconds).toDate());
+    return { id: docSnapshot.id, ...snapshotData};
+   // return { id: docSnapshot.id, creationDate: new Timestamp(snapshotData.creationDate.seconds, snapshotData.creationDate.nanoseconds), ...snapshotData};
   });
   return claimsMap;
 }
